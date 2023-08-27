@@ -1,13 +1,13 @@
 {
 	"private": true,
-	"name": "10.hakidame",
+	"name": "11.hakidame",
 	"version": "0.0.1",
 	"description": "",
 	"author": "ukonpower",
 	"license": "MIT",
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build && cp -rf ./public/. ../hakidame/src/public/10/ && cp ./config.json ../hakidame/src/public/10/"
+		"build": "vite build && cp -rf ./public/. ../hakidame/src/public/11/ && cp ./config.json ../hakidame/src/public/11/"
 	},
 	"workspaces": [
 		"packages/*"

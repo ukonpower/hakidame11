@@ -10,10 +10,9 @@ import { ERing } from '../Entities/Effects/ERing';
 import { ECross } from '../Entities/Effects/ECross';
 import { EArea } from '../Entities/Effects/EArea';
 import { EGridLine } from '../Entities/Effects/EGridLine';
-import { Trails } from '../Entities/Trails';
 import { Content } from '../Entities/Custom/Content';
 import { Skybox } from '../Entities/Skybox';
-import { MonoTile } from '../Entities/Custom/MonoTile';
+import { Poles } from '../Entities/Poles';
 
 export const router = ( node: GLP.BLidgeNode ) => {
 
@@ -67,21 +66,9 @@ export const router = ( node: GLP.BLidgeNode ) => {
 
 		return new Content();
 
-	} else if ( node.class == "Tile" ) {
+	} else if ( node.class == 'Poles' ) {
 
-		const tile = new MonoTile();
-
-		setTimeout( () => {
-
-			if ( node.name !== "Wei" ) {
-
-				// tile.position.y += 100.0;
-
-			}
-
-		}, 3 );
-
-		return tile;
+		return new Poles();
 
 	}
 
