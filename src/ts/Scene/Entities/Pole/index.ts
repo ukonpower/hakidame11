@@ -4,7 +4,7 @@ import poleFrag from './shaders/pole.fs';
 import poleVert from './shaders/pole.vs';
 
 import { globalUniforms } from '~/ts/Globals';
-import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
+import { hotGet } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 
 export class Pole extends GLP.Entity {
 
