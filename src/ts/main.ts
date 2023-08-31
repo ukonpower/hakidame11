@@ -86,7 +86,7 @@ class App {
 
 			}
 
-			this.animate();
+			// this.animate();
 
 		}
 

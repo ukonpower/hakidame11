@@ -65,7 +65,7 @@ void main( void ) {
 
 		if( sampleViewPos.z < depthViewPos.z && sampleViewPos.z >= depthViewPos.z - 1.0 ) {
 
-			occlusion++;
+			occlusion += smoothstep( 1.0, 0.2, length( sampleOffset ) );
 
 		}
 		
