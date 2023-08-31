@@ -46,7 +46,6 @@ export const globalUniforms: {[key: string]: GLP.Uniforms} = {
 	},
 };
 
-
 /*-------------------------------
 	DEBUG
 -------------------------------*/

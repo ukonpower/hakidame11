@@ -1,5 +1,10 @@
 import * as GLP from 'glpower';
 import { Pole } from '../Pole';
+import { Modeler } from '~/ts/libs/Modeler';
+import { power } from '~/ts/Globals';
+
+import basicVert from '~/shaders/basic.vs';
+import basicFrag from '~/shaders/basic.fs';
 
 export class Poles extends GLP.Entity {
 
@@ -10,6 +15,8 @@ export class Poles extends GLP.Entity {
 		const num = 16;
 
 		let prev: Pole | null = null;
+
+		const model = new GLP.Entity();
 
 		for ( let i = 0; i < num; i ++ ) {
 
@@ -34,6 +41,13 @@ export class Poles extends GLP.Entity {
 			prev = pole;
 
 		}
+
+		// this.addComponent( 'geometry', new Modeler( power ).bakeEntity( model ) );
+		// this.addComponent( 'material', new GLP.Material( {
+		// 	vert: basicVert,
+		// 	frag: basicFrag,
+		// 	type: [ "deferred", "shadowMap" ]
+		// } ) );
 
 	}
 
