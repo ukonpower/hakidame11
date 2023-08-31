@@ -48,4 +48,22 @@ export class PoleWire extends GLP.Entity {
 
 	}
 
+	public entityToEntity( start: GLP.Entity, end: GLP.Entity ) {
+
+		const posStart = start.position.clone();
+		const posEnd = end.position.clone();
+
+		this.updateMatrix( true );
+		const selfMatrixWorldInverse = this.matrixWorld.clone().inverse();
+
+		start.parent!.updateMatrix( true );
+		posStart.applyMatrix4( start.parent!.matrixWorld ).applyMatrix4( selfMatrixWorldInverse );
+
+		end.parent!.updateMatrix( true );
+		posEnd.applyMatrix4( end.parent!.matrixWorld ).applyMatrix4( selfMatrixWorldInverse );
+
+		this.setPoints( posStart, posEnd );
+
+	}
+
 }

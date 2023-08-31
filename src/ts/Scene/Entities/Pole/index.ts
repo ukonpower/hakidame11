@@ -91,6 +91,23 @@ export class Pole extends GLP.Entity {
 
 		}
 
+		// henatsu
+
+		const henatsu = new GLP.Entity();
+		henatsu.addComponent( "geometry", new GLP.CylinderGeometry( 0.4, 0.4, 1.0 ) );
+		henatsu.addComponent( "material", new GLP.Material( { ...matParam, defines: { 'HENNATSU': '' } } ) );
+		henatsu.position.set( 0.3, height * 0.7, 0.3 );
+		henatsu.quaternion.setFromEuler( new GLP.Euler( 0, Math.PI / 2, 0 ) );
+		this.add( henatsu );
+
+		for ( let i = 0; i < 3; i ++ ) {
+
+			const wire = new PoleWire();
+			henatsu.add( wire );
+			wire.entityToEntity( wire, this.gaishi[ i ] );
+
+		}
+
 	}
 
 	public setNextPole( pole: Pole ) {

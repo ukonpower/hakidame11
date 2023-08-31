@@ -248,7 +248,6 @@ export class MainCamera extends GLP.Entity {
 					type: '1i'
 				},
 			} ),
-			resolutionRatio: 0.2,
 			passThrough: true,
 		} );
 
@@ -544,8 +543,8 @@ export class MainCamera extends GLP.Entity {
 			passes: [
 				// this.lightShaft,
 				// this.ssr,
-				// this.ssao,
-				// this.ssComposite,
+				this.ssao,
+				this.ssComposite,
 				// this.dofCoc,
 				// this.dofBokeh,
 				// this.dofComposite,

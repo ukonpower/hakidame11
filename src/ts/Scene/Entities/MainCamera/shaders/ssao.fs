@@ -35,6 +35,7 @@ void main( void ) {
 	vec4 rayViewPos = viewMatrix * vec4(rayPos, 1.0);
 
 	if( rayPos.x + rayPos.y + rayPos.z == 0.0 ) return;
+	if( length(rayPos - cameraPosition) > 100.0 ) return;
 
 	vec3 normal = texture( uGbufferNormal, vUv ).xyz;
 	float occlusion = 0.0;
