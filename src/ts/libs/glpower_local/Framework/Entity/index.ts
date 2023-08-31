@@ -5,7 +5,7 @@ import { GPUCompute } from "../Component/GPUCompute";
 import { Geometry } from "../Component/Geometry";
 import { Light } from "../Component/Light";
 import { Material } from "../Component/Material";
-import { Matrix, Matrix } from "../../Math/Matrix";
+import { Matrix } from "../../Math/Matrix";
 import { Quaternion } from "../../Math/Quaternion";
 import { Vector } from "../../Math/Vector";
 import { EventEmitter } from "../../utils/EventEmitter";
@@ -55,7 +55,7 @@ export class Entity extends EventEmitter {
 		this.name = "";
 		this.uuid = entityCount ++;
 
-		this.position = new Vector();
+		this.position = new Vector( 0.0, 0.0, 0.0, 1.0 );
 		this.quaternion = new Quaternion( 0.0, 0.0, 0.0, 1.0 );
 		this.scale = new Vector( 1.0, 1.0, 1.0 );
 
@@ -130,13 +130,7 @@ export class Entity extends EventEmitter {
 
 		// matrix
 
-		if ( ! event.matrix ) event.matrix = new Matrix();
-
-		this.matrixWorldPrev.copy( this.matrixWorld );
-
-		this.matrix.setFromTransform( this.position, this.quaternion, this.scale );
-
-		this.matrixWorld.copy( this.matrix ).preMultiply( event.matrix );
+		this.updateMatrix();
 
 		// components
 
@@ -220,6 +214,28 @@ export class Entity extends EventEmitter {
 	public remove( entity: Entity ) {
 
 		this.children = this.children.filter( c => c.uuid != entity.uuid );
+
+	}
+
+	/*-------------------------------
+		Matrix
+	-------------------------------*/
+
+	public updateMatrix( updateParent?: boolean ) {
+
+		if ( this.parent && updateParent ) {
+
+			this.parent.updateMatrix( true );
+
+		}
+
+		const matrix = this.parent ? this.parent.matrixWorld : new Matrix();
+
+		this.matrixWorldPrev.copy( this.matrixWorld );
+
+		this.matrix.setFromTransform( this.position, this.quaternion, this.scale );
+
+		this.matrixWorld.copy( this.matrix ).preMultiply( matrix );
 
 	}
 

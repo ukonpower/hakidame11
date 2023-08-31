@@ -5,14 +5,23 @@ import poleVert from './shaders/pole.vs';
 
 import { globalUniforms } from '~/ts/Globals';
 import { hotGet } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
+import { PoleWire } from '../PoleWire';
 
 export class Pole extends GLP.Entity {
+
+	public nextPole: Pole | null;
+
+	public gaishi: GLP.Entity[];
+	public wires: PoleWire[];
 
 	constructor() {
 
 		super();
 
 		const height = 11;
+		this.nextPole = null;
+		this.gaishi = [];
+		this.wires = [];
 
 		const matParam: GLP.MaterialParam = {
 			name: "pole",
@@ -62,6 +71,7 @@ export class Pole extends GLP.Entity {
 		sasae.addComponent( "geometry", new GLP.CubeGeometry( 2.5, 0.2, 0.15 ) );
 		sasae.addComponent( "material", mat );
 		sasae.position.set( 0.3, height * 0.85, 0.3 );
+		sasae.quaternion.setFromEuler( new GLP.Euler( 0, Math.PI / 2, 0 ) );
 		this.add( sasae );
 
 		// gaishi
@@ -72,10 +82,48 @@ export class Pole extends GLP.Entity {
 			gaishi.addComponent( "geometry", new GLP.CylinderGeometry( 0.09, 0.09, 0.24 ) );
 			gaishi.addComponent( "material", mat );
 			gaishi.position.set( ( i / 2 - 0.5 ) * 2, 0.25, 0.0 );
-
 			sasae.add( gaishi );
+			this.gaishi.push( gaishi );
+
+			const wire = new PoleWire();
+			sasae.add( wire );
+			this.wires.push( wire );
 
 		}
+
+	}
+
+	public setNextPole( pole: Pole ) {
+
+		this.nextPole = pole;
+
+		this.calcPoleWire();
+
+	}
+
+	public calcPoleWire() {
+
+		if ( ! this.nextPole ) return;
+
+		this.wires.forEach( ( wire, i ) => {
+
+			if ( ! this.nextPole ) return;
+
+			const start = this.gaishi[ i ].position.clone();
+			const end = this.nextPole.gaishi[ i ].position.clone();
+
+			const gaishiSasae = this.gaishi[ i ].parent!;
+			gaishiSasae.updateMatrix( true );
+
+			const nextGaishiSasae = this.nextPole.gaishi[ i ].parent!;
+			nextGaishiSasae.updateMatrix( true );
+
+			end.applyMatrix4( nextGaishiSasae.matrixWorld );
+			end.applyMatrix4( gaishiSasae.matrixWorld.clone().inverse() );
+
+			wire.setPoints( start, end );
+
+		} );
 
 	}
 

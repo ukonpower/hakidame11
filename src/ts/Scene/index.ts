@@ -94,8 +94,6 @@ export class Scene extends GLP.EventEmitter {
 
 		this.root.noticeRecursive( "sceneTick", event, );
 
-		this.emit( "update" );
-
 		this.renderer.render( renderStack );
 
 	}

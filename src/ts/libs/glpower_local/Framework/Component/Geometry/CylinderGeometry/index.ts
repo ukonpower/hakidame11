@@ -3,7 +3,7 @@ import { Geometry } from "..";
 
 export class CylinderGeometry extends Geometry {
 
-	constructor( radiusTop: number = 0.5, radiusBottom: number = 0.5, height: number = 1, radSegments: number = 10, heightSegments: number = 1 ) {
+	constructor( radiusTop: number = 0.5, radiusBottom: number = 0.5, height: number = 1, radSegments: number = 10, heightSegments: number = 1, futa: boolean = true ) {
 
 		super();
 
@@ -62,6 +62,8 @@ export class CylinderGeometry extends Geometry {
 				} else {
 
 					//bottom, top
+
+					if ( ! futa ) continue;
 
 					const side = i - heightSegments - 1;
 
