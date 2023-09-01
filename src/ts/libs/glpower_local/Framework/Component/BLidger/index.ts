@@ -115,7 +115,7 @@ export class BLidger extends Component {
 
 				const cylinderParam = this.node.param as any;
 
-				entity.addComponent( 'geometry', new CylinderGeometry() );
+				entity.addComponent( 'geometry', new CylinderGeometry( 0.5, 0.5, 1, 16 ) );
 
 			} else if ( this.node.type == 'plane' ) {
 

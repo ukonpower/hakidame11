@@ -15,7 +15,7 @@ export class Pole extends GLP.Entity {
 
 		super();
 
-		const height = 11;
+		const height = 10;
 		const radius = 0.3;
 
 		this.nextPole = null;

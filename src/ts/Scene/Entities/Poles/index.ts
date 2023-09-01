@@ -6,6 +6,7 @@ import { power } from '~/ts/Globals';
 
 import basicVert from '~/shaders/basic.vs';
 import basicFrag from '~/shaders/basic.fs';
+import { Tomare } from '../Tomare';
 
 export class Poles extends GLP.Entity {
 
@@ -13,7 +14,11 @@ export class Poles extends GLP.Entity {
 
 		super();
 
-		const num = 20;
+
+		/*-------------------------------
+			Poles
+		-------------------------------*/
+		const num = 25;
 
 		let prev: Pole | null = null;
 
@@ -52,6 +57,10 @@ export class Poles extends GLP.Entity {
 
 		}
 
+		/*-------------------------------
+			Wire
+		-------------------------------*/
+
 		const wires = new GLP.Entity();
 		wires.addComponent( "geometry", new Modeler( power ).bakeEntity( wiresModel ) );
 		wires.addComponent( "material", new GLP.Material( {
@@ -62,8 +71,24 @@ export class Poles extends GLP.Entity {
 		} ) );
 		this.add( wires );
 
-		console.log( new Modeler( power ).bakeEntity( wiresModel ) );
+		/*-------------------------------
+			Tomare
+		-------------------------------*/
 
+		const tNum = 20;
+
+		for ( let i = 0; i < tNum; i ++ ) {
+
+			const t = new Tomare();
+			const x = ( Math.random() - 0.5 ) * 20.0;
+			const z = ( Math.random() - 0.5 ) * 20.0;
+			t.position.set( x, 0, z );
+			t.quaternion.multiply( new GLP.Quaternion().setFromEuler( new GLP.Euler( 0.0, Math.PI * 2.0 * Math.random(), 0.0 ) ) );
+			t.scale.multiply( 1.0 + Math.random() );
+
+			this.add( t );
+
+		}
 
 	}
 

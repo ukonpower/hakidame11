@@ -24,20 +24,26 @@ vec3 filmic(vec3 x) {
 }
 
 void main( void ) {
-
-
 	vec3 col = vec3( 0.0, 0.0, 0.0 );
 	vec2 uv = vUv;
 	vec2 cuv = uv - 0.5;
-	float len = length(cuv);
+	float w = 0.035;
 
-	col = texture( backbuffer0, vUv ).xyz;
-	// col = filmic( col ) * 1.0;
+	float d;
+
+	#pragma loop_start 8
+		d = -float( LOOP_INDEX ) / 8.0 * w;
+        col.x += texture( backbuffer0, (lens_distortion( cuv, d ) * 0.95 + 0.5) + vec2( (float( LOOP_INDEX ) / 8.0 - 0.5 ) * 0.002, 0.0 )).x;
+        col.y += texture( backbuffer0, lens_distortion( cuv, d * 3.0 ) * 0.95 + 0.5 ).y;
+        col.z += texture( backbuffer0, lens_distortion( cuv, d * 6.0 ) * 0.95 + 0.5 ).z;
+	#pragma loop_end
+	col.xyz /= 8.0;
 
 	#pragma loop_start 4
 		col += texture( uBloomTexture[ LOOP_INDEX ], uv ).xyz * ( 0.5 + float(LOOP_INDEX) * 0.5 ) * 0.1;
 	#pragma loop_end
 
+	float len = length(cuv);
 	col *= smoothstep( 1.0, 0.4, len );
 
 	outColor = vec4( col, 1.0 );

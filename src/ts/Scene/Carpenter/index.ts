@@ -37,7 +37,7 @@ export class Carpenter extends GLP.EventEmitter {
 		blidge.on( 'sync/timeline', ( frame: GLP.BLidgeFrame ) => {
 		} );
 
-		if ( process.env.NODE_ENV == "development" ) {
+		if ( process.env.NODE_ENV == "development" && false ) {
 
 			blidge.connect( 'ws://localhost:3100' );
 

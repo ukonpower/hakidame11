@@ -110,7 +110,7 @@ export class MainCamera extends GLP.Entity {
 
 		const lookAt = this.addComponent( 'lookAt', new LookAt() );
 
-		this.addComponent( 'shakeViewer', new ShakeViewer( 0.3, 1.0 ) );
+		this.addComponent( 'shakeViewer', new ShakeViewer( 0.5, 1.0 ) );
 		this.addComponent( 'rotateViewer', new RotateViewer( 5.0 ) );
 
 		// resolution
@@ -727,7 +727,7 @@ export class MainCamera extends GLP.Entity {
 		this.cameraComponent.near = 0.01;
 		this.cameraComponent.far = 1000;
 		this.cameraComponent.aspect = resolution.x / resolution.y;
-		this.cameraComponent.fov = this.baseFov + Math.max( 0, 1 / this.cameraComponent.aspect - 1 ) * 20.0;
+		this.cameraComponent.fov = this.baseFov + Math.max( 0, 1 / this.cameraComponent.aspect - 1 ) * 40.0;
 		this.cameraComponent.needsUpdate = true;
 
 	}

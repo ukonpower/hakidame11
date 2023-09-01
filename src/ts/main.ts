@@ -52,7 +52,7 @@ class App {
 
 		if ( process.env.NODE_ENV == 'development' ) {
 
-			const debug = true;
+			const debug = false;
 
 			if ( gpuState && debug ) {
 
