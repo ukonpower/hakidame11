@@ -2,9 +2,8 @@ import * as GLP from 'glpower';
 
 import poleVert from './shaders/pole.vs';
 import poleFrag from '~/shaders/basic.fs';
-import { gl } from '~/ts/Globals';
 
-export class PoleWire extends GLP.Entity {
+export class Wire extends GLP.Entity {
 
 	public start: GLP.Vector;
 	public end: GLP.Vector;

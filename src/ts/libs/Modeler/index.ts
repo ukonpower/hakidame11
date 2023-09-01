@@ -1,4 +1,5 @@
 import * as GLP from 'glpower';
+import { setUniforms } from '~/ts/Scene/Renderer';
 import { shaderParse } from '~/ts/Scene/Renderer/ShaderParser';
 
 export class Modeler {
@@ -15,7 +16,7 @@ export class Modeler {
 
 	}
 
-	public bakeTf( baseGeometry: GLP.Geometry, vertexShader: string, defines?: any ) {
+	public bakeTf( baseGeometry: GLP.Geometry, vertexShader: string, uniforms?: any, defines?: any ) {
 
 		const resultGeo = new GLP.Geometry();
 
@@ -45,7 +46,7 @@ export class Modeler {
 
 		tf.bind( () => {
 
-			program.setShader( shaderParse( vertexShader, defines ), "#version 300 es\n void main(){ discard; }", { transformFeedbackVaryings: [ 'o_position', 'o_normal' ] } );
+			program.setShader( shaderParse( vertexShader, { ...defines, "TF_MODELER": "" } ), "#version 300 es\n void main(){ discard; }", { transformFeedbackVaryings: [ 'o_position', 'o_normal' ] } );
 
 		} );
 
@@ -64,6 +65,8 @@ export class Modeler {
 				}
 
 			} );
+
+			setUniforms( program, uniforms );
 
 			program.use( () => {
 
@@ -105,7 +108,6 @@ export class Modeler {
 
 				resultGeo.setAttribute( 'position', outPos, 3 );
 				resultGeo.setAttribute( 'normal', outNormal, 3 );
-
 
 			} );
 
@@ -152,13 +154,21 @@ export class Modeler {
 		const normalArray : number[] = [];
 		const indexArray: number[] = [];
 
-		const _ = ( e: GLP.Entity, mat: GLP.Matrix ) => {
+		const _ = ( e: GLP.Entity, matrix: GLP.Matrix ) => {
 
-			const geo = e.getComponent<GLP.Geometry>( 'geometry' );
-
-			const currentIndex = posArray.length / 3;
+			let geo = e.getComponent<GLP.Geometry>( 'geometry' );
 
 			if ( geo ) {
+
+				const mat = e.getComponent<GLP.Material>( 'material' );
+
+				if ( mat ) {
+
+					geo = this.bakeTf( geo, mat.vert, mat.uniforms, { ...mat.defines } );
+
+				}
+
+				const currentIndex = posArray.length / 3;
 
 				const pos = geo.getAttribute( 'position' );
 
@@ -167,7 +177,7 @@ export class Modeler {
 					for ( let i = 0; i < pos.array.length; i += 3 ) {
 
 						const p = new GLP.Vector( pos.array[ i + 0 ], pos.array[ i + 1 ], pos.array[ i + 2 ], 1 );
-						p.applyMatrix4( mat );
+						p.applyMatrix4( matrix );
 						posArray.push( p.x, p.y, p.z );
 
 					}
@@ -181,7 +191,7 @@ export class Modeler {
 					for ( let i = 0; i < normal.array.length; i += 3 ) {
 
 						const p = new GLP.Vector( normal.array[ i + 0 ], normal.array[ i + 1 ], normal.array[ i + 2 ], 0 );
-						p.applyMatrix4( mat );
+						p.applyMatrix4( matrix );
 						normalArray.push( p.x, p.y, p.z );
 
 					}
@@ -207,7 +217,7 @@ export class Modeler {
 
 				c.updateMatrix( );
 
-				_( c, mat.clone().multiply( c.matrix ) );
+				_( c, matrix.clone().multiply( c.matrix ) );
 
 			} );
 

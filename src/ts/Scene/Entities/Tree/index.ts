@@ -7,8 +7,8 @@ import treeVert from './shaders/tree.vs';
 import treeFrag from './shaders/tree.fs';
 
 import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
-import { TFModeler } from '~/ts/libs/TFModeler';
 import { shaderParse } from '../../Renderer/ShaderParser';
+import { Modeler } from '~/ts/libs/Modeler';
 
 export class Tree extends GLP.Entity {
 
@@ -51,9 +51,9 @@ export class Tree extends GLP.Entity {
 		geo.setAttribute( "instanceScale", new Float32Array( scaleArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "id", new Float32Array( idArray ), 3, { instanceDivisor: 1 } );
 
-		const modeler = new TFModeler( power );
+		const modeler = new Modeler( power );
 
-		const staticGeo = modeler.create( geo, shaderParse( treeModelVert, {} ) );
+		const staticGeo = modeler.bakeTf( geo, shaderParse( treeModelVert, {} ) );
 
 		this.addComponent( "geometry", staticGeo );
 

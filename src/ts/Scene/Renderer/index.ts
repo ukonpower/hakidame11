@@ -43,11 +43,12 @@ type GPUState = {
 	state: boolean,
 }[]
 
+export let textureUnit = 0;
+
 export class Renderer extends GLP.Entity {
 
 	private programManager: ProgramManager;
 
-	private textureUnit: number = 0;
 
 	private canvasSize: GLP.Vector;
 
@@ -464,7 +465,7 @@ export class Renderer extends GLP.Entity {
 
 	private draw( drawId: string, renderType: GLP.MaterialRenderType, geometry: GLP.Geometry, material: GLP.Material, option?: DrawOption ) {
 
-		this.textureUnit = 0;
+		textureUnit = 0;
 
 		// status
 
@@ -588,7 +589,7 @@ export class Renderer extends GLP.Entity {
 
 				if ( dLight.component.renderTarget ) {
 
-					const texture = dLight.component.renderTarget.textures[ 0 ].activate( this.textureUnit ++ );
+					const texture = dLight.component.renderTarget.textures[ 0 ].activate( textureUnit ++ );
 
 					program.setUniform( 'directionalLightCamera[' + i + '].near', '1fv', [ dLight.component.near ] );
 					program.setUniform( 'directionalLightCamera[' + i + '].far', '1fv', [ dLight.component.far ] );
@@ -621,7 +622,7 @@ export class Renderer extends GLP.Entity {
 
 				if ( sLight.component.renderTarget ) {
 
-					const texture = sLight.component.renderTarget.textures[ 0 ].activate( this.textureUnit ++ );
+					const texture = sLight.component.renderTarget.textures[ 0 ].activate( textureUnit ++ );
 
 					program.setUniform( 'spotLightCamera[' + i + '].near', '1fv', [ sLight.component.near ] );
 					program.setUniform( 'spotLightCamera[' + i + '].far', '1fv', [ sLight.component.far ] );
@@ -644,64 +645,7 @@ export class Renderer extends GLP.Entity {
 
 		}
 
-		const keys = Object.keys( uniforms );
-
-		for ( let i = 0; i < keys.length; i ++ ) {
-
-			const name = keys[ i ];
-			const uni = uniforms[ name ];
-			const type = uni.type;
-			const value = uni.value;
-
-			const arrayValue: ( number | boolean )[] = [];
-
-			const _ = ( v: GLP.Uniformable ) => {
-
-				if ( v == null ) return;
-
-				if ( typeof v == 'number' || typeof v == 'boolean' ) {
-
-					arrayValue.push( v );
-
-				} else if ( 'isVector' in v ) {
-
-					arrayValue.push( ...v.getElm( ( 'vec' + type.charAt( 0 ) ) as any ) );
-
-				} else if ( 'isTexture' in v ) {
-
-					v.activate( this.textureUnit ++ );
-
-					arrayValue.push( v.unit );
-
-				} else {
-
-					arrayValue.push( ...v.elm );
-
-				}
-
-			};
-
-			if ( Array.isArray( value ) ) {
-
-				for ( let j = 0; j < value.length; j ++ ) {
-
-					_( value[ j ] );
-
-				}
-
-			} else {
-
-				_( value );
-
-			}
-
-			if ( arrayValue.length > 0 ) {
-
-				program.setUniform( name, type, arrayValue );
-
-			}
-
-		}
+		setUniforms( program, uniforms );
 
 		const vao = program.getVAO( drawId.toString() );
 
@@ -837,3 +781,66 @@ export class Renderer extends GLP.Entity {
 	}
 
 }
+
+export const setUniforms = ( program: GLP.GLPowerProgram, uniforms: GLP.Uniforms ) => {
+
+	const keys = Object.keys( uniforms );
+
+	for ( let i = 0; i < keys.length; i ++ ) {
+
+		const name = keys[ i ];
+		const uni = uniforms[ name ];
+		const type = uni.type;
+		const value = uni.value;
+
+		const arrayValue: ( number | boolean )[] = [];
+
+		const _ = ( v: GLP.Uniformable ) => {
+
+			if ( v == null ) return;
+
+			if ( typeof v == 'number' || typeof v == 'boolean' ) {
+
+				arrayValue.push( v );
+
+			} else if ( 'isVector' in v ) {
+
+				arrayValue.push( ...v.getElm( ( 'vec' + type.charAt( 0 ) ) as any ) );
+
+			} else if ( 'isTexture' in v ) {
+
+				v.activate( textureUnit ++ );
+
+				arrayValue.push( v.unit );
+
+			} else {
+
+				arrayValue.push( ...v.elm );
+
+			}
+
+		};
+
+		if ( Array.isArray( value ) ) {
+
+			for ( let j = 0; j < value.length; j ++ ) {
+
+				_( value[ j ] );
+
+			}
+
+		} else {
+
+			_( value );
+
+		}
+
+		if ( arrayValue.length > 0 ) {
+
+			program.setUniform( name, type, arrayValue );
+
+		}
+
+	}
+
+};

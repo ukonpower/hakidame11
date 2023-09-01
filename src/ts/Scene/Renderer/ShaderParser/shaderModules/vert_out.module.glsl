@@ -1,4 +1,10 @@
 //[
+#ifdef TF_MODELER
+	o_position = outPos;
+	o_normal = outNormal;
+	return;
+#endif
+
 vec4 modelPosition = modelMatrix * vec4(outPos, 1.0);
 vec4 mvPosition = viewMatrix * modelPosition;
 gl_Position = projectionMatrix * mvPosition;

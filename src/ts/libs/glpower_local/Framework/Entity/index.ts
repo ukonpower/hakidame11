@@ -239,6 +239,16 @@ export class Entity extends EventEmitter {
 
 	}
 
+	public applyMatrix( matrix: Matrix ) {
+
+		this.matrix.clone().multiply( matrix ).decompose(
+			this.position,
+			this.quaternion,
+			this.scale
+		);
+
+	}
+
 	/*-------------------------------
 		Components
 	-------------------------------*/

@@ -42,6 +42,4 @@ void main( void ) {
 	
 	#include <vert_out>
 
-	gl_PointSize = 4.0;
-	
 }

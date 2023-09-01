@@ -1,5 +1,6 @@
 import * as GLP from 'glpower';
 import { Pole } from '../Pole';
+import { Wire } from '../Wire';
 import { Modeler } from '~/ts/libs/Modeler';
 import { power } from '~/ts/Globals';
 
@@ -16,13 +17,12 @@ export class Poles extends GLP.Entity {
 
 		let prev: Pole | null = null;
 
-		const model = new GLP.Entity();
+		const wiresModel = new GLP.Entity();
 
 		for ( let i = 0; i < num; i ++ ) {
 
 			const pole = new Pole();
 
-			// pole.position.x += ( i - ( num - 1 ) / 2 ) * 4.0;
 			const x = ( Math.random() - 0.5 ) * 15.0;
 			const z = ( Math.random() - 0.5 ) * 15.0;
 
@@ -34,7 +34,17 @@ export class Poles extends GLP.Entity {
 
 			if ( prev ) {
 
-				prev.setNextPole( pole );
+				pole.gaishi.forEach( ( c, i ) => {
+
+					const wire = new Wire();
+					wiresModel.add( wire );
+					if ( prev ) {
+
+						wire.entityToEntity( prev.gaishi[ i ], c );
+
+					}
+
+				} );
 
 			}
 
@@ -42,12 +52,18 @@ export class Poles extends GLP.Entity {
 
 		}
 
-		// this.addComponent( 'geometry', new Modeler( power ).bakeEntity( model ) );
-		// this.addComponent( 'material', new GLP.Material( {
-		// 	vert: basicVert,
-		// 	frag: basicFrag,
-		// 	type: [ "deferred", "shadowMap" ]
-		// } ) );
+		const wires = new GLP.Entity();
+		wires.addComponent( "geometry", new Modeler( power ).bakeEntity( wiresModel ) );
+		wires.addComponent( "material", new GLP.Material( {
+			name: "wires",
+			vert: basicVert,
+			frag: basicFrag,
+			type: [ "deferred", "shadowMap" ]
+		} ) );
+		this.add( wires );
+
+		console.log( new Modeler( power ).bakeEntity( wiresModel ) );
+
 
 	}
 
