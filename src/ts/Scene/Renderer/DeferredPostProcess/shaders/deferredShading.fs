@@ -59,7 +59,7 @@ void main( void ) {
 
 	// ambient
 
-	outColor += 0.0;
+	outColor += 0.4;
 
 	// direcitonalLight
 	

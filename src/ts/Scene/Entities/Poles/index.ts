@@ -13,7 +13,7 @@ export class Poles extends GLP.Entity {
 
 		super();
 
-		const num = 16;
+		const num = 20;
 
 		let prev: Pole | null = null;
 
@@ -23,8 +23,8 @@ export class Poles extends GLP.Entity {
 
 			const pole = new Pole();
 
-			const x = ( Math.random() - 0.5 ) * 15.0;
-			const z = ( Math.random() - 0.5 ) * 15.0;
+			const x = ( Math.random() - 0.5 ) * 19.0;
+			const z = ( Math.random() - 0.5 ) * 19.0;
 
 			pole.scale.multiply( Math.random() * 0.5 + 0.5 );
 			pole.position.set( x, 0, z );

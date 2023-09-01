@@ -25,7 +25,7 @@ in vec2 vUv;
 
 layout (location = 0) out vec4 outColor;
 
-#define SAMPLE 16
+#define SAMPLE 32
 
 void main( void ) {
 
@@ -43,7 +43,7 @@ void main( void ) {
 	for( int i = 0; i < SAMPLE; i ++ ) {
 
 		float seed = uTime + float( i ) / float( SAMPLE );
-		vec3 noise = vec3( random( vUv + fract( seed ) ), random( vUv - fract( seed )), random( vUv - fract( seed + 0.5 ) ) );
+		vec3 noise = vec3( random( vUv + fract( seed ) ), random( vUv - fract( seed )), random( vUv - fract( seed + 0.5 ) ) * 0.95 + 0.05 );
 	
 		float r = sqrt( noise.x );
 		float theta = TPI * noise.y;
@@ -51,7 +51,7 @@ void main( void ) {
 		vec3 tangent = normalize( cross( normal, abs( normal.x ) > 0.001 ? vec3( 0.0, 1.0, 0.0 ) : vec3( 1.0, 0.0, 0.0 ) ) );
 		vec3 binormal = cross( tangent, normal );
 		
-		vec3 sampleOffset = tangent * tDir.x + binormal * tDir.y + normal * tDir.z * noise.z;
+		vec3 sampleOffset = (tangent * tDir.x + binormal * tDir.y + normal * tDir.z) * noise.z;
 		vec3 samplePos = rayPos + sampleOffset;
 
 		vec4 depthCoord = (projectionMatrix * viewMatrix * vec4(samplePos, 1.0 ) );
@@ -65,13 +65,13 @@ void main( void ) {
 
 		if( sampleViewPos.z < depthViewPos.z && sampleViewPos.z >= depthViewPos.z - 1.0 ) {
 
-			occlusion += smoothstep( 1.0, 0.2, length( sampleOffset ) );
+			occlusion += ( 1.0 - noise.z ) * ( 1.0 - noise.z );
 
 		}
 		
 	}
 
 	occlusion /= float( SAMPLE );
-	outColor = vec4( mix( texture( uSSAOBackBuffer, vUv ).xyz, vec3( occlusion ), 0.1 ), 1.0 );
+	outColor = vec4( mix( texture( uSSAOBackBuffer, vUv ).xyz, vec3( occlusion ), 0.4 ), 1.0 );
 
 }

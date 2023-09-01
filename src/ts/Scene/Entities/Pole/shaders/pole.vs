@@ -15,6 +15,7 @@ void main( void ) {
 	#ifdef ASHIBA
 
 		outPos.xy *= rotate( HPI );
+		outPos.xz *= rotate( HPI );
 		outPos += oPos;
 	
 	#endif

@@ -552,8 +552,8 @@ export class MainCamera extends GLP.Entity {
 				// this.motionBlurNeighbor,
 				// this.motionBlur,
 				this.fxaa,
-				this.bloomBright,
-				...this.bloomBlur,
+				// this.bloomBright,
+				// ...this.bloomBlur,
 				this.composite,
 			] } )
 		);
@@ -709,8 +709,8 @@ export class MainCamera extends GLP.Entity {
 		this.rtSSR1.setSize( resolutionHalf );
 		this.rtSSR2.setSize( resolutionHalf );
 
-		this.rtSSAO1.setSize( resolutionHalf );
-		this.rtSSAO2.setSize( resolutionHalf );
+		this.rtSSAO1.setSize( e.resolution );
+		this.rtSSAO2.setSize( e.resolution );
 
 	}
 
@@ -727,7 +727,7 @@ export class MainCamera extends GLP.Entity {
 		this.cameraComponent.near = 0.01;
 		this.cameraComponent.far = 1000;
 		this.cameraComponent.aspect = resolution.x / resolution.y;
-		this.cameraComponent.fov = this.baseFov + Math.max( 0, 1 / this.cameraComponent.aspect - 1 ) * 10.0;
+		this.cameraComponent.fov = this.baseFov + Math.max( 0, 1 / this.cameraComponent.aspect - 1 ) * 20.0;
 		this.cameraComponent.needsUpdate = true;
 
 	}

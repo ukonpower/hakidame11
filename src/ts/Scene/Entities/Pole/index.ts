@@ -16,6 +16,7 @@ export class Pole extends GLP.Entity {
 		super();
 
 		const height = 11;
+		const radius = 0.3;
 
 		this.nextPole = null;
 
@@ -29,7 +30,7 @@ export class Pole extends GLP.Entity {
 		// pole
 
 		const pole = new GLP.Entity();
-		pole.addComponent( "geometry", new GLP.CylinderGeometry( 0.30, 0.20, height ) );
+		pole.addComponent( "geometry", new GLP.CylinderGeometry( radius, radius - 0.1, height ) );
 		pole.position.y += height / 2;
 		model.add( pole );
 
@@ -44,7 +45,7 @@ export class Pole extends GLP.Entity {
 
 				for ( let j = 0; j < 2; j ++ ) {
 
-					r.push( ( j - 0.5 ) * 0.6, ( i + j * 0.5 ) * 0.8, 0 );
+					r.push( 0.0, ( i + j * 0.5 ) * 0.8, ( j - 0.5 ) * 0.6 );
 
 				}
 
@@ -89,11 +90,28 @@ export class Pole extends GLP.Entity {
 
 		// henatsu
 
-		const henatsu = new GLP.Entity();
-		henatsu.addComponent( "geometry", new GLP.CylinderGeometry( 0.4, 0.4, 1.0 ) );
-		henatsu.position.set( 0.3, height * 0.7, 0.3 );
-		henatsu.quaternion.setFromEuler( new GLP.Euler( 0, Math.PI / 2, 0 ) );
-		model.add( henatsu );
+		if ( Math.random() < 0.8 ) {
+
+			const henatsu = new GLP.Entity();
+			henatsu.addComponent( "geometry", new GLP.CylinderGeometry( 0.4, 0.4, 1.0 ) );
+			henatsu.position.set( 0.3, height * 0.7, 0.3 );
+			henatsu.quaternion.setFromEuler( new GLP.Euler( 0, Math.PI / 2, 0 ) );
+			model.add( henatsu );
+
+		}
+
+		// kanagu
+
+		for ( let i = 0; i < 5; i ++ ) {
+
+			const w = i / 5;
+			const r = ( radius + 0.02 ) - 0.1 * w;
+			const kanagu = new GLP.Entity();
+			kanagu.addComponent( "geometry", new GLP.CylinderGeometry( r, r, 0.2 ) );
+			kanagu.position.set( 0.0, height * ( 0.2 + w * 0.6 + Math.random() * 0.2 ), 0.0 );
+			model.add( kanagu );
+
+		}
 
 		// modeling
 

@@ -27,10 +27,9 @@ void main( void ) {
 	vec3 dir = normalize( cameraPosition - gCol0.xyz );
 	float f = fresnel( dot( dir, gCol1.xyz ) );
 
-	// outColor = vec4( 1.0 );
 	outColor += vec4( texture( uShadingBuffer, vUv ).xyz, 1.0 );
 	outColor += texture( uSSRTexture, vUv ) * 0.3 * f;
-	outColor *= max( 0.0, 1.0 - texture( uSSAOTexture, vUv ).x * 1.3 );
+	outColor *= max( 0.0, 1.0 - texture( uSSAOTexture, vUv ).x * 3.0 );
 	outColor += texture( uLightShaftTexture, vUv ) * 0.2;
 
 }
